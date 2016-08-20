@@ -3,7 +3,6 @@
 class JSON_API_v1_Controller {
 
 	  public function get_Scores() {
-		  
 			$posts = get_posts(array(
 				'fields' 			=> 'ids',
 				'posts_per_page'	=> -1,
@@ -14,7 +13,6 @@ class JSON_API_v1_Controller {
 			foreach($posts as $postid)
 			{
 				$userid= get_field('bfuserID',$postid);
-
 				$xx[]=['score' => get_field('score',$postid),'name' => get_field('name',$userid),'email' => get_field('email',$userid)];
 			}
 		return $xx;
@@ -25,12 +23,10 @@ class JSON_API_v1_Controller {
 		 $uid=$_GET['uid'];
 		 $post_id=0;
 		 
-		 //$userid= get_field('bfuserID',$uid);
 		 $uname= get_field('name',$uid);
 		 
 		 
 	    if($uname) :
-			//$post=get_post($uid);
 			$postid = get_posts(array(
 			'fields' 			=> 'ids',
 			'numberposts'	=> 1,
@@ -74,32 +70,82 @@ class JSON_API_v1_Controller {
 				));
 				
 				if($postid):
-				echo 1;
 					return $postid[0];
-					
 				else:
-					  $my_post = array(
-							 'post_title' => $name,
-							 'post_status' => 'publish',
-							 'post_type' => 'bfuser',
-						  );
-						$post_id = wp_insert_post($my_post);
-						add_post_meta($post_id, 'name', $name, true);
-						add_post_meta($post_id, 'email', $email, true);
-						echo 2;
-						return $post_id;
+				  $my_post = array(
+						 'post_title' => $name,
+						 'post_status' => 'publish',
+						 'post_type' => 'bfuser',
+					  );
+					$post_id = wp_insert_post($my_post);
+					add_post_meta($post_id, 'name', $name, true);
+					add_post_meta($post_id, 'email', $email, true);
+					return $post_id;
 				endif;
-				echo 3;
 			endif;
-			echo 4;
 	 }
 	 
-	 public function checkifsameServer()
-	 {
-		 //echo $_SERVER['HTTP_REFERER'];
-		 return  $_SERVER['SERVER_ADDR'];
-		 
+	 public function login_user(){
+	 	session_start();
+		$name=$_GET['bfname'];
+		$email=$_GET['bfemail'];
+
+			$posts = get_posts(array(
+				'fields' 			=> 'ids',
+				'numberposts'	=> 1,
+				'post_type'		=> 'bfuser',
+				'meta_query'	=> array(
+					'relation'		=> 'AND',
+					array(
+						'key'	 	=> 'name',
+						'value'	  	=> $name,
+						'compare' 	=> '=',
+					),
+					array(
+						'key'	  	=> 'email',
+						'value'	  	=> $email,
+						'compare' 	=> '=',
+					),
+				),
+			));
+			$id=$posts[0];
+			if($id > 0)		
+			{
+				$_SESSION['usr']=['name' => $name,'email' => $email, 'id' => $id];
+				return ['status'=>'loggedin','id' => $id];
+			}
+			else
+				return ['status'=>'invaliduser'];
+
 	 }
+
+	 public function init(){
+	 	session_start();
+	 	$userid=$_GET['uid'];
+	 		$scoreid = get_posts(array(
+				'fields' 			=> 'ids',
+				'posts_per_page'	=> 1,
+				'post_type'			=> 'bfscore',
+				'meta_key'		=> 'bfuserID',
+				'meta_value'	=> $userid,
+				'compare' 	=> '='
+			));
+		return ['score' => get_field('score',$scoreid[0]),'name' => get_field('name',$userid),'email' => get_field('email',$userid)];
+	 }
+
+	 public function status(){
+		session_start();
+	 	if(isset($_SESSION['usr']))
+	 		return ['status'=>'loggedin'];
+	 	else
+	 		return ['status'=>'loggedout'];
+	 }
+
+	public function get_user(){
+		 	session_start();
+	 		return $_SESSION['usr'];
+	 }
+
 	
 
 	

@@ -422,7 +422,7 @@ add_filter( 'widget_tag_cloud_args', 'twentysixteen_widget_tag_cloud_args' );
 
 
 function remove_admin_menu_items() {
-  $remove_menu_items = array(__('Posts'),__('Links'),__('Pages'), __('Comments'));
+  $remove_menu_items = array(__('Posts'),__('Links'),__('Pages'), __('Comments'), __('Media'));
   global $menu;
   end ($menu);
   while (prev($menu)){
@@ -434,3 +434,28 @@ function remove_admin_menu_items() {
 }
 
 add_action('admin_menu', 'remove_admin_menu_items');
+
+
+
+
+/* place in theme's functions.php file */
+/* disable json api if api key not correct */
+
+
+//add_action('init','json_api_apikey_check' , 1 );
+function json_api_apikey_check()
+{
+	$a = session_id();
+if(empty($a)) session_start();
+echo "SID: ".SID."<br>session_id(): ".session_id()."<br>COOKIE: ".$_COOKIE["PHPSESSID"];
+
+	$api_key = 'hello';
+	$base = get_option('json_api_base', 'api');
+	$this_url = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+	
+	if ( ( isset($_REQUEST['json'] ) || strstr($this_url , $base.'/') ) && ( !isset($_REQUEST['apikey']) || $_REQUEST['apikey'] != 'hello' ) )
+	{
+		print "[error:99] Permission denied!";
+		exit;
+	}
+}

@@ -7,7 +7,7 @@ class JSON_API_v1_Controller {
 				'fields' 			=> 'ids',
 				'posts_per_page'	=> -1,				
 				'post_type'			=> 'bfscore',
-				'meta_key'			=> 'score',
+				'meta_key'			=> 'bfscore',
 				'orderby'			=> 'meta_value_num',
 				'order'				=> 'DESC'
 			));
@@ -15,18 +15,18 @@ class JSON_API_v1_Controller {
 			$xx;
 			foreach($posts as $postid)
 			{
-				$userid= get_field('bfuserID',$postid);
-				$xx[]=['score' => get_field('score',$postid),'name' => get_field('name',$userid),'email' => get_field('email',$userid)];
+				$userid= get_field('bfuserID',$postid);				
+				$xx[]=['score' => get_field('bfscore',$postid),'name' => get_field('bfname',$userid),'email' => get_field('bfemail',$userid)];
 			}
 		return $xx;
 	  }
   
      public function insert_Score() {
-		 $score=$_GET['score'];
+		 $score=$_GET['bfscore'];
 		 $uid=$_GET['uid'];
 		 $post_id=0;
 		 
-		 $uname= get_field('name',$uid);
+		 $uname= get_field('bfname',$uid);
 		 
 		 
 	    if($uname) :
@@ -37,11 +37,11 @@ class JSON_API_v1_Controller {
 			'meta_key'		=> 'bfuserID',
 			'meta_value'	=> $uid
 			));
-			$dbscore=get_field('score',$postid[0]);
+			$dbscore=get_field('bfscore',$postid[0]);
 				if($postid):			
 					//update if greater
 					if($dbscore < $score):
-						update_post_meta($postid[0], 'score', $score);
+						update_post_meta($postid[0], 'bfscore', $score);
 						$post_id=$postid[0];
 					endif;
 				else:
@@ -52,7 +52,7 @@ class JSON_API_v1_Controller {
 						 'post_type' => 'bfscore',
 					  );
 					$post_id = wp_insert_post($my_post);
-					add_post_meta($post_id, 'score', $score, true);
+					add_post_meta($post_id, 'bfscore', $score, true);
 					add_post_meta($post_id, 'bfuserID', $uid, true);
 				endif;		
 		endif;
@@ -68,7 +68,7 @@ class JSON_API_v1_Controller {
 				'fields' 			=> 'ids',
 				'numberposts'	=> 1,
 				'post_type'		=> 'bfuser',
-				'meta_key'		=> 'email',
+				'meta_key'		=> 'bfemail',
 				'meta_value'	=> $email
 				));
 				
@@ -81,8 +81,8 @@ class JSON_API_v1_Controller {
 						 'post_type' => 'bfuser',
 					  );
 					$post_id = wp_insert_post($my_post);
-					add_post_meta($post_id, 'name', $name, true);
-					add_post_meta($post_id, 'email', $email, true);
+					add_post_meta($post_id, 'bfname', $name, true);
+					add_post_meta($post_id, 'bfemail', $email, true);
 					return $post_id;
 				endif;
 			endif;
@@ -100,12 +100,12 @@ class JSON_API_v1_Controller {
 				'meta_query'	=> array(
 					'relation'		=> 'AND',
 					array(
-						'key'	 	=> 'name',
+						'key'	 	=> 'bfname',
 						'value'	  	=> $name,
 						'compare' 	=> '=',
 					),
 					array(
-						'key'	  	=> 'email',
+						'key'	  	=> 'bfemail',
 						'value'	  	=> $email,
 						'compare' 	=> '=',
 					),
@@ -134,7 +134,7 @@ class JSON_API_v1_Controller {
 				'compare' 	=> '='
 			));
 		if($userid):
-			return ['score' => get_field('score',$scoreid[0]),'name' => get_field('name',$userid),'email' => get_field('email',$userid)];
+			return ['score' => get_field('bfscore',$scoreid[0]),'name' => get_field('bfname',$userid),'email' => get_field('bfemail',$userid)];
 		else:
 			return ['status'=>'No user is available'];
 		endif;

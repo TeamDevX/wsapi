@@ -152,13 +152,47 @@ class JSON_API_v1_Controller {
 		 	session_start();
 	 		return $_SESSION['usr'];
 	 }
-
-	
-
-	
-	
-	
-	
+	 
+	public function get_GameContent(){
+		 	$game_content = get_posts(array(				
+				'posts_per_page'	=> 1,				
+				'post_type'			=> 'bggame_content',
+				//'orderby'          => 'modified',
+				'order'				=> 'ASC',
+				'post_status'     => 'publish'				
+			));	
+			
+			$game_content_array = array();
+			foreach($game_content as $gcontent)
+			{
+				$strapline = get_field('bfstrap_line', $gcontent->ID);
+				
+				$bfchallenge_1_content_id = get_field('bfchallenge_1_content', $gcontent->ID);				
+				$bfchallenge_1_content = get_field('bgproduct_images_group', $bfchallenge_1_content_id);
+				$bfchallenge_1_content_array = array();
+				foreach($bfchallenge_1_content as $bfchallenge_1){
+					$bfchallenge_1_content_array[] = $bfchallenge_1['filename'];
+				}
+				
+				$bfchallenge_2_content_id = get_field('bfchallenge_2_content', $gcontent->ID);				
+				$bfchallenge_2_content = get_field('bfcoupongroup', $bfchallenge_2_content_id);	
+				$bfchallenge_2_content_array = array();
+				foreach($bfchallenge_2_content as $bfchallenge2){
+					$bfchallenge_2_content_array[] = $bfchallenge2['bfcode'];
+				}	
+				
+				$result_coupon_code = get_field('bfresult_coupon_code', $gcontent->ID);
+				
+				$bfprizes = get_field('bfprizes', $gcontent->ID);
+				$bfprizes_array = array();
+				foreach($bfprizes as $bfprize){
+					$bfprizes_array[] = $bfprize['filename'];
+				}
+				
+				$game_content_array[]=['game_title' => $gcontent->post_title, 'game_desc' => $gcontent->post_content,'game_strapline' => $strapline,'bfchallenge_1_content' => $bfchallenge_1_content_array, 'bfchallenge_2_content' => $bfchallenge_2_content_array, 'result_coupon_code' => $result_coupon_code, 'bfprizes' => $bfprizes_array];
+			}			
+		return $game_content_array;		
+	}	
 }
 
 ?>

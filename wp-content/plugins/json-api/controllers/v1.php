@@ -5,8 +5,11 @@ class JSON_API_v1_Controller {
 	  public function get_Scores() {
 			$posts = get_posts(array(
 				'fields' 			=> 'ids',
-				'posts_per_page'	=> -1,
-				'post_type'			=> 'bfscore'
+				'posts_per_page'	=> -1,				
+				'post_type'			=> 'bfscore',
+				'meta_key'			=> 'score',
+				'orderby'			=> 'meta_value_num',
+				'order'				=> 'DESC'
 			));
 
 			$xx;
@@ -130,7 +133,11 @@ class JSON_API_v1_Controller {
 				'meta_value'	=> $userid,
 				'compare' 	=> '='
 			));
-		return ['score' => get_field('score',$scoreid[0]),'name' => get_field('name',$userid),'email' => get_field('email',$userid)];
+		if($userid):
+			return ['score' => get_field('score',$scoreid[0]),'name' => get_field('name',$userid),'email' => get_field('email',$userid)];
+		else:
+			return ['status'=>'No user is available'];
+		endif;
 	 }
 
 	 public function status(){

@@ -22,8 +22,8 @@ class JSON_API_v1_Controller {
 	  }
   
      public function insert_Score() {
-		 $score=$_GET['bfscore'];
-		 $uid=$_GET['uid'];
+		 $score=$_POST['bfscore'];
+		 $uid=$_POST['uid'];
 		 $post_id=0;
 		 
 		 $uname= get_field('bfname',$uid);
@@ -60,8 +60,8 @@ class JSON_API_v1_Controller {
 	 }
 	 
 	 public function insert_User() {
-		 $name=$_GET['bfname'];
-		 $email=$_GET['bfemail'];
+		 $name=$_POST['bfname'];
+		 $email=$_POST['bfemail'];
 		 
 		 if($name && $email):
 				$postid = get_posts(array(
@@ -90,8 +90,8 @@ class JSON_API_v1_Controller {
 	 
 	 public function login_user(){
 	 	session_start();
-		$name=$_GET['bfname'];
-		$email=$_GET['bfemail'];
+		$name=$_POST['bfname'];
+		$email=$_POST['bfemail'];
 
 			$posts = get_posts(array(
 				'fields' 			=> 'ids',
@@ -124,7 +124,7 @@ class JSON_API_v1_Controller {
 
 	 public function init(){
 	 	session_start();
-	 	$userid=$_GET['uid'];
+	 	$userid=$_POST['uid'];
 	 		$scoreid = get_posts(array(
 				'fields' 			=> 'ids',
 				'posts_per_page'	=> 1,

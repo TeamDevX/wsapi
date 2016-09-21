@@ -459,3 +459,16 @@ echo "SID: ".SID."<br>session_id(): ".session_id()."<br>COOKIE: ".$_COOKIE["PHPS
 		exit;
 	}
 }
+
+add_action( 'admin_menu', 'set_admin_menu_separator' );
+function set_admin_menu_separator() {
+$position = 9;
+global $menu;
+$menu[$position] = array(
+0	=>	'',
+1	=>	'read',
+2	=>	'separator' . $position,
+3	=>	'',
+4	=>	'wp-menu-separator'
+);
+}

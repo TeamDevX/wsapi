@@ -7,7 +7,10 @@
 <!doctype html>
 <html ng-app=blackFriday>
 <head><meta charset=utf-8><title>blackFriday</title>
-<meta name=description content=""><meta name=viewport content="width=device-width"><!-- Place favicon.ico and apple-touch-icon.png in the root directory --><link rel=stylesheet href=ajs/styles/vendor.css><link rel=stylesheet href=ajs/styles/app.css>
+<meta name=description content="">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="viewport" content="minimal-ui, width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"><!-- Place favicon.ico and apple-touch-icon.png in the root directory --><link rel=stylesheet href=ajs/styles/vendor.css><link rel=stylesheet href=ajs/styles/app.css>
 <base href="/" target="_blank">
 </head>
 

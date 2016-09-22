@@ -192,7 +192,34 @@ class JSON_API_v1_Controller {
 				$game_content_array[]=['game_title' => $gcontent->post_title, 'game_desc' => $gcontent->post_content,'game_strapline' => $strapline,'bfchallenge_1_content' => $bfchallenge_1_content_array, 'bfchallenge_2_content' => $bfchallenge_2_content_array, 'result_coupon_code' => $result_coupon_code, 'bfprizes' => $bfprizes_array];
 			}			
 		return $game_content_array;		
-	}	
+	}
+	public function send_Email(){
+		$email = 'vik@teamdevx.com';
+		$bfemails = get_posts(array(				
+			'posts_per_page'	=> 1,				
+			'post_type'			=> 'bfemail',			
+			'order'				=> 'ASC',
+			'post_status'     => 'publish'				
+		));		
+		$mail_sent = array();
+		foreach($bfemails as $bfemail){
+			$from_email = get_field('bfemail_address', $bfemail->ID);
+			$email_subject = get_field('bfemail_subject', $bfemail->ID);
+			$email_body = get_field('bfemail_body', $bfemail->ID);			
+			$headers = array(
+				"From: <".$from_email.">",
+				"MIME-Version: 1.0",
+				"Content-type: text/html; charset=UTF-8'"
+			);
+			$mail = wp_mail( $email, $email_subject, $email_body, $headers);
+			if($mail){
+				$mail_sent['status'] = 'Success';
+			}else{
+				$mail_sent['status'] = 'Fail';
+			}
+		}
+		return $mail_sent;			
+	 }
 }
 
 ?>

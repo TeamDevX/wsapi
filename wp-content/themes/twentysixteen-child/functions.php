@@ -9,7 +9,7 @@ function theme_enqueue_styles() {
 }
 
 function remove_admin_menu_items() {
-  $remove_menu_items = array(__('Posts'),__('Links'),__('Pages'), __('Comments'), __('Media'), __('Media'), __('Plugins'), __('Appearance'), __('Users'), __('Tools'), __('Settings'), __('Custom Fields'), __('Dashboard'), __('Media'));
+  $remove_menu_items = array(__('Posts'),__('Links'),__('Pages'), __('Comments'), __('Media'), __('Media'), __('Plugins'), __('Users'), __('Tools'), __('Settings'), __('Custom Fields'), __('Dashboard'), __('Media'));
   global $menu;
   end ($menu);
   while (prev($menu)){
@@ -18,11 +18,19 @@ function remove_admin_menu_items() {
       unset($menu[key($menu)]);
     }
   }
- //remove_menu_page( 'edit.php?post_type=acf-field-group' ); 
- remove_menu_page( 'cptui_main_menu' ); 
+ //remove_menu_page( 'edit.php?post_type=acf-field-group' );      
  
 }
 add_action('admin_menu', 'remove_admin_menu_items');
+
+
+
+function wpse_136058_remove_menu_pages() {
+
+    remove_menu_page( 'admin.php?page=cptui_manage_post_types' );
+    
+}
+add_action( 'admin_init', 'wpse_136058_remove_menu_pages' );
 
 function delete_custom_post_data() {
 		add_menu_page(__( 'Reset All Data', 'reset-all-data' ), 'Reset all data', 'manage_options', 'reset-all-data', 'reset_all_data', 'dashicons-trash');
